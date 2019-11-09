@@ -1,0 +1,157 @@
+//
+//  ViewController.swift
+//  AbbeyRoadHackathon
+//
+//  Created by Josh Prewer on 09/11/2019.
+//  Copyright © 2019 Josh Prewer. All rights reserved.
+//
+
+import Cocoa
+
+class ViewController: NSViewController {
+
+    @IBOutlet private weak var imageButton: NSButton!
+    @IBOutlet private weak var sonifyButton: NSButton!
+    @IBOutlet private weak var imageView: NSImageView!
+
+    @IBOutlet weak var progressView: NSView!
+    @IBOutlet weak var progressBar: NSProgressIndicator!
+
+    private var categories = [String]() {
+        didSet {
+            getAudioURLS(categories: categories)
+        }
+    }
+    let imageClassification = ImageClassification()
+
+
+    var readyToDownloadAudio = false {
+        didSet {
+            if readyToDownloadAudio {
+            }
+        }
+    }
+    var audioURLS = [URL]()
+    var imageURL: URL? {
+        didSet {
+            guard imageURL != nil else { return }
+            imageClassification.loadData(
+                inputURL: imageURL!,
+                reportTotal: { (total) in
+                    DispatchQueue.main.async { [weak self] in
+                        guard let strongSelf = self else {return }
+                        strongSelf.progressBar.maxValue = Double(total)
+                        strongSelf.progressBar.doubleValue = 0
+                        strongSelf.progressView.animator().isHidden = false
+                    }
+            },
+                reportProgress: { (current) in
+                    DispatchQueue.main.async { [weak self] in
+                        self?.progressBar.doubleValue = Double(current)
+                    }
+            },
+                completion: {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let strongSelf = self else {return }
+                        strongSelf.progressView.animator().isHidden = true
+                        let image = NSImage.init(contentsOf: strongSelf.imageURL!)
+                        strongSelf.imageView.image = image
+                        strongSelf.categories = strongSelf.imageClassification.categories
+                    }
+            }
+            )
+        }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        progressView.isHidden = true
+    }
+
+    override var representedObject: Any? {
+        didSet {
+        // Update the view, if already loaded.
+        }
+    }
+
+    @IBAction func imageButtonPushed(sender: NSButton) {
+        let openPanel = NSOpenPanel()
+        openPanel.message = "Choose images to be sonified."
+        openPanel.prompt = "Choose"
+        openPanel.allowedFileTypes = ["public.image"]
+        openPanel.canChooseDirectories = false
+        openPanel.canChooseFiles = true
+        openPanel.allowsMultipleSelection = false
+        openPanel.beginSheetModal(for: view.window!) { (response) in
+            if response == .OK {
+                guard let url = openPanel.url else { return }
+                openPanel.close()
+                self.imageURL = url
+            }
+        }
+
+    }
+
+    func getAudioURLS(categories: [String]) {
+        audioURLS.removeAll()
+        readyToDownloadAudio = false
+
+        for category in categories {
+            let path = "http://m2.audiocommons.org/api/audioclips/search?pattern=\(category)&limit=1&page=1&source=freesound"
+            let url = URL(string: path)!
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data, error == nil else {
+                    print("error\(String(describing: error?.localizedDescription))")
+                    return
+                }
+
+                do{
+                    //here dataResponse received from a network request
+                    let jsonResponse = try JSONSerialization.jsonObject(with:
+                        data, options: [])
+                    guard let jsonArray = jsonResponse as? [String: Any] else { return }
+                    guard let resultArray = jsonArray["results"] as? [Any] else { return }
+                    guard let result = resultArray[0] as? [String: Any] else { return }
+                    guard let membersArray = result["members"] as? [Any] else { return }
+                    guard let member = membersArray[0] as? [String: Any] else { return }
+                    guard let content = member["content"] as? [String: Any] else { return }
+                    guard let availableAs = content["availableAs"] as? [Any] else { return }
+
+                    for data in availableAs {
+                        guard let item = data as? [String: Any] else { continue }
+                        guard let audioPath = item["locator"] as? String else { continue }
+                        guard audioPath.hasSuffix(".mp3") else { continue }
+                        guard let audioURL = URL(string: audioPath) else { continue }
+
+                        let documentsDirectoryURL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                        let destinationUrl = documentsDirectoryURL.appendingPathComponent(audioURL.lastPathComponent)
+                        if FileManager.default.fileExists(atPath: destinationUrl.path) {
+                            print("The file already exists at path")
+                        } else {
+                            URLSession.shared.downloadTask(with: audioURL, completionHandler: { (location, response, error) -> Void in
+                                guard let location = location, error == nil else { return }
+                                do {
+                                    try FileManager.default.moveItem(at: location, to: destinationUrl)
+                                    print("File moved to documents folder")
+                                } catch let error as NSError {
+                                    print(error.localizedDescription)
+                                }
+                            }).resume()
+                        }
+                        return
+                    }
+
+                } catch let parsingError {
+                    print("Error", parsingError)
+                }
+            }
+            task.resume()
+        }
+    }
+
+    @IBAction func sonifyButtonPushed(sender: NSButton) {
+
+    }
+}
+
