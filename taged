@@ -1,0 +1,14 @@
+[1mdiff --git a/Play_audio.py b/Play_audio.py[m
+[1mindex 108d0f1..78eae11 100644[m
+[1m--- a/Play_audio.py[m
+[1m+++ b/Play_audio.py[m
+[36m@@ -1,2 +1,7 @@[m
+[31m-from playsound import playsound[m
+[31m-playsound('test_voice.wav')[m
+[32m+[m[32m# import soundfile as sf[m
+[32m+[m[32mimport pyaudio[m
+[32m+[m
+[32m+[m[32mpyaudio.PyAudio()[m
+[32m+[m[32mpyaudio.Pyaudio.open();[m
+[41m+[m
+[41m+[m
