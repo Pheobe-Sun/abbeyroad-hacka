@@ -25,9 +25,10 @@ class ViewController: NSViewController {
     let imageClassification = ImageClassification()
 
 
-    var readyToDownloadAudio = false {
+    var audioDownloaded = false {
         didSet {
-            if readyToDownloadAudio {
+            if audioDownloaded {
+                sendAudioFiles()
             }
         }
     }
@@ -90,12 +91,10 @@ class ViewController: NSViewController {
                 self.imageURL = url
             }
         }
-
     }
 
     func getAudioURLS(categories: [String]) {
         audioURLS.removeAll()
-        readyToDownloadAudio = false
 
         for category in categories {
             let path = "http://m2.audiocommons.org/api/audioclips/search?pattern=\(category)&limit=1&page=1&source=freesound"
@@ -106,7 +105,7 @@ class ViewController: NSViewController {
                     return
                 }
 
-                do{
+                do {
                     //here dataResponse received from a network request
                     let jsonResponse = try JSONSerialization.jsonObject(with:
                         data, options: [])
@@ -124,22 +123,12 @@ class ViewController: NSViewController {
                         guard audioPath.hasSuffix(".mp3") else { continue }
                         guard let audioURL = URL(string: audioPath) else { continue }
 
-                        let documentsDirectoryURL =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                        let destinationUrl = documentsDirectoryURL.appendingPathComponent(audioURL.lastPathComponent)
-                        if FileManager.default.fileExists(atPath: destinationUrl.path) {
-                            print("The file already exists at path")
-                        } else {
-                            URLSession.shared.downloadTask(with: audioURL, completionHandler: { (location, response, error) -> Void in
-                                guard let location = location, error == nil else { return }
-                                do {
-                                    try FileManager.default.moveItem(at: location, to: destinationUrl)
-                                    print("File moved to documents folder")
-                                } catch let error as NSError {
-                                    print(error.localizedDescription)
-                                }
-                            }).resume()
-                        }
-                        return
+                        self.audioURLS.append(audioURL)
+                        break
+                    }
+
+                    if self.audioURLS.count == categories.count {
+                        self.downloadAudio()
                     }
 
                 } catch let parsingError {
@@ -150,8 +139,52 @@ class ViewController: NSViewController {
         }
     }
 
-    @IBAction func sonifyButtonPushed(sender: NSButton) {
+    func downloadAudio() {
+        let documentsDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        do {
+            let contents = try FileManager.default.contentsOfDirectory(atPath: documentsDirectoryURL.path)
+            for item in contents {
+                let fileToRemove = documentsDirectoryURL.appendingPathComponent(item)
+                try FileManager.default.removeItem(at: fileToRemove)
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
 
+        for audioURL in audioURLS {
+            let destinationUrl = documentsDirectoryURL.appendingPathComponent(audioURL.lastPathComponent)
+            if FileManager.default.fileExists(atPath: destinationUrl.path) {
+                print("The file already exists at path")
+            } else {
+                URLSession.shared.downloadTask(with: audioURL, completionHandler: { (location, response, error) -> Void in
+                    guard let location = location, error == nil else { return }
+                    do {
+                        try FileManager.default.moveItem(at: location, to: destinationUrl)
+                        let contents = try FileManager.default.contentsOfDirectory(atPath: documentsDirectoryURL.path)
+
+                        if contents.count == self.categories.count {
+                            self.audioDownloaded = true
+                        }
+                        print("File moved to documents folder")
+                    } catch let error as NSError {
+                        print(error.localizedDescription)
+                    }
+                }).resume()
+            }
+        }
+    }
+
+    func sendAudioFiles() {
+        let pathToAudioFiles = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let path = "http://localhost:7000"
+        let url = URL(string: path)!
+
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data, error == nil else {
+                print("error\(String(describing: error?.localizedDescription))")
+                return
+            }
+        }
     }
 }
 

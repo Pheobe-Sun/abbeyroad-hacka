@@ -61,7 +61,8 @@ class ImageClassification {
 
     var categories = [String]()
 
-    func loadData(inputURL: URL, reportTotal: @escaping (Int) -> Void,
+    func loadData(inputURL: URL,
+                  reportTotal: @escaping (Int) -> Void,
                   reportProgress: @escaping (Int) -> Void,
                   completion: @escaping () -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
