@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  AbbeyRoadHackathon
-//
-//  Created by Josh Prewer on 09/11/2019.
-//  Copyright © 2019 Josh Prewer. All rights reserved.
-//
-
 import Cocoa
 
 class ViewController: NSViewController {
@@ -36,12 +28,6 @@ class ViewController: NSViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         progressView.isHidden = true
-    }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
     }
 
     @IBAction func imageButtonPushed(sender: NSButton) {
