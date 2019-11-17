@@ -1,11 +1,3 @@
-//
-//  DataSource.swift
-//  AbbeyRoadHackathon
-//
-//  Created by Josh Prewer on 09/11/2019.
-//  Copyright © 2019 Josh Prewer. All rights reserved.
-//
-
 import Foundation
 import Cocoa
 import Vision
@@ -15,7 +7,6 @@ struct ImageFile {
     let thumbnail: NSImage?
     let name: String
     let categories: [String: VNConfidence]
-    let searchTerms: [String: VNConfidence]
 
     init(url: URL) {
         // generate thumbnail
@@ -40,16 +31,11 @@ struct ImageFile {
         // Process classification results
         guard let observations = request.results as? [VNClassificationObservation] else {
             categories = [:]
-            searchTerms = [:]
             return
         }
         categories = observations
             .filter { $0.hasMinimumRecall(0.01, forPrecision: 0.9) }
             .reduce(into: [String: VNConfidence]()) { dict, observation in dict[observation.identifier] = observation.confidence }
-
-        searchTerms = observations
-            .filter { $0.hasMinimumPrecision(0.01, forRecall: 0.7) }
-            .reduce(into: [String: VNConfidence]()) { (dict, observation) in dict[observation.identifier] = observation.confidence }
     }
 }
 
