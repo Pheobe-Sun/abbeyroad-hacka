@@ -39,26 +39,26 @@ struct ImageFile {
     }
 }
 
-class ImageClassification {
-
+class ImageClassifier {
     private var imageCategories = [String]()
-    private var imageSearchTerms = [String]()
     private var searchResults: [String]?
 
     var categories = [String]()
 
-    func loadData(inputURL: URL,
+    func categoriseImage(inputURL: URL,
                   reportTotal: @escaping (Int) -> Void,
                   reportProgress: @escaping (Int) -> Void,
                   completion: @escaping () -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
+
             let imageFile = ImageFile(url: inputURL)
             self.categories.removeAll()
             self.categories = Array(imageFile.categories.keys)
+
             if self.categories.isEmpty {
                 self.categories = ["other"]
             }
-            print(self.categories)
+
             completion()
         }
     }

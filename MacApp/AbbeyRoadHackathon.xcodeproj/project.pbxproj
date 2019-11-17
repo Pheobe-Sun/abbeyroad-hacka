@@ -36,6 +36,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5A4C671D23817B83008694D7 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
 		5A9B6F6A2376E9C3004BAAD8 = {
 			isa = PBXGroup;
 			children = (
@@ -56,12 +63,13 @@
 			isa = PBXGroup;
 			children = (
 				5A9B6F762376E9C3004BAAD8 /* AppDelegate.swift */,
-				5A9B6F782376E9C3004BAAD8 /* ViewController.swift */,
 				5AA38F2B2376FC93003CEA2A /* ImageClassifier.swift */,
+				5A9B6F782376E9C3004BAAD8 /* ViewController.swift */,
 				5A9B6F7A2376E9C5004BAAD8 /* Assets.xcassets */,
 				5A9B6F7C2376E9C5004BAAD8 /* Main.storyboard */,
 				5A9B6F7F2376E9C5004BAAD8 /* Info.plist */,
 				5A9B6F802376E9C5004BAAD8 /* AbbeyRoadHackathon.entitlements */,
+				5A4C671D23817B83008694D7 /* tests */,
 			);
 			path = AbbeyRoadHackathon;
 			sourceTree = "<group>";

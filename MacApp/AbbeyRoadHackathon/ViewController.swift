@@ -22,7 +22,7 @@ class ViewController: NSViewController {
             getAudioURLS(categories: categories)
         }
     }
-    let imageClassification = ImageClassification()
+    let imageClassification = ImageClassifier()
 
 
     var audioDownloaded = false {
@@ -36,7 +36,7 @@ class ViewController: NSViewController {
     var imageURL: URL? {
         didSet {
             guard imageURL != nil else { return }
-            imageClassification.loadData(
+            imageClassification.categoriseImage(
                 inputURL: imageURL!,
                 reportTotal: { (total) in
                     DispatchQueue.main.async { [weak self] in
