@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  AbbeyRoadHackathon
-//
-//  Created by Josh Prewer on 09/11/2019.
-//  Copyright © 2019 Josh Prewer. All rights reserved.
-//
-
 import Cocoa
 
 class ViewController: NSViewController {
@@ -15,15 +7,13 @@ class ViewController: NSViewController {
     @IBOutlet private weak var imageView: NSImageView!
 
     @IBOutlet weak var progressView: NSView!
-    @IBOutlet weak var progressBar: NSProgressIndicator!
+    @IBOutlet weak var progressIndicator: NSProgressIndicator!
 
     private var categories = [String]() {
         didSet {
             getAudioURLS(categories: categories)
         }
     }
-    let imageClassification = ImageClassification()
-
 
     var audioDownloaded = false {
         didSet {
@@ -33,47 +23,11 @@ class ViewController: NSViewController {
         }
     }
     var audioURLS = [URL]()
-    var imageURL: URL? {
-        didSet {
-            guard imageURL != nil else { return }
-            imageClassification.loadData(
-                inputURL: imageURL!,
-                reportTotal: { (total) in
-                    DispatchQueue.main.async { [weak self] in
-                        guard let strongSelf = self else {return }
-                        strongSelf.progressBar.maxValue = Double(total)
-                        strongSelf.progressBar.doubleValue = 0
-                        strongSelf.progressView.animator().isHidden = false
-                    }
-            },
-                reportProgress: { (current) in
-                    DispatchQueue.main.async { [weak self] in
-                        self?.progressBar.doubleValue = Double(current)
-                    }
-            },
-                completion: {
-                    DispatchQueue.main.async { [weak self] in
-                        guard let strongSelf = self else {return }
-                        strongSelf.progressView.animator().isHidden = true
-                        let image = NSImage.init(contentsOf: strongSelf.imageURL!)
-                        strongSelf.imageView.image = image
-                        strongSelf.categories = strongSelf.imageClassification.categories
-                    }
-            }
-            )
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         progressView.isHidden = true
-    }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
     }
 
     @IBAction func imageButtonPushed(sender: NSButton) {
@@ -84,14 +38,27 @@ class ViewController: NSViewController {
         openPanel.canChooseDirectories = false
         openPanel.canChooseFiles = true
         openPanel.allowsMultipleSelection = false
+
         openPanel.beginSheetModal(for: view.window!) { (response) in
             if response == .OK {
                 guard let url = openPanel.url else { return }
                 openPanel.close()
-                self.imageURL = url
+                self.progressView.isHidden = false
+
+                ImageClassifier.categoriseImage(
+                inputURL: url) { (imageFile) in
+                    DispatchQueue.main.async { [weak self] in
+                        guard let strongSelf = self else { return }
+                        strongSelf.progressView.isHidden = true
+                        let image = NSImage.init(contentsOf: imageFile.url)
+                        strongSelf.imageView.image = image
+                        strongSelf.categories = Array(imageFile.categories.keys)
+                    }
+                }
             }
         }
     }
+
 
     func getAudioURLS(categories: [String]) {
         audioURLS.removeAll()
