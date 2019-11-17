@@ -22,8 +22,6 @@ class ViewController: NSViewController {
             getAudioURLS(categories: categories)
         }
     }
-    let imageClassification = ImageClassifier()
-
 
     var audioDownloaded = false {
         didSet {
@@ -36,7 +34,7 @@ class ViewController: NSViewController {
     var imageURL: URL? {
         didSet {
             guard imageURL != nil else { return }
-            imageClassification.categoriseImage(
+            ImageClassifier.categoriseImage(
                 inputURL: imageURL!,
                 reportTotal: { (total) in
                     DispatchQueue.main.async { [weak self] in
@@ -51,13 +49,13 @@ class ViewController: NSViewController {
                         self?.progressBar.doubleValue = Double(current)
                     }
             },
-                completion: {
+                completion: { (imageFile) in
                     DispatchQueue.main.async { [weak self] in
                         guard let strongSelf = self else {return }
                         strongSelf.progressView.animator().isHidden = true
-                        let image = NSImage.init(contentsOf: strongSelf.imageURL!)
+                        let image = NSImage.init(contentsOf: imageFile.url)
                         strongSelf.imageView.image = image
-                        strongSelf.categories = strongSelf.imageClassification.categories
+                        strongSelf.categories = Array(imageFile.categories.keys)
                     }
             }
             )
