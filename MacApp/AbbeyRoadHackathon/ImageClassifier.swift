@@ -28,10 +28,7 @@ struct ImageFile {
 }
 
 class ImageClassifier {
-    static func categoriseImage(inputURL: URL,
-                                reportTotal: @escaping (Int) -> Void,
-                                reportProgress: @escaping (Int) -> Void,
-                                completion: @escaping (ImageFile) -> Void) {
+    static func categoriseImage(inputURL: URL, completion: @escaping (ImageFile) -> Void) {
         DispatchQueue.global(qos: .userInitiated).async {
             let imageFile = ImageFile(url: inputURL)
             completion(imageFile)

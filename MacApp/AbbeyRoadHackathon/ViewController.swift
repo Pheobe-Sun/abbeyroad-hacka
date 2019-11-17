@@ -36,19 +36,6 @@ class ViewController: NSViewController {
             guard imageURL != nil else { return }
             ImageClassifier.categoriseImage(
                 inputURL: imageURL!,
-                reportTotal: { (total) in
-                    DispatchQueue.main.async { [weak self] in
-                        guard let strongSelf = self else {return }
-                        strongSelf.progressBar.maxValue = Double(total)
-                        strongSelf.progressBar.doubleValue = 0
-                        strongSelf.progressView.animator().isHidden = false
-                    }
-            },
-                reportProgress: { (current) in
-                    DispatchQueue.main.async { [weak self] in
-                        self?.progressBar.doubleValue = Double(current)
-                    }
-            },
                 completion: { (imageFile) in
                     DispatchQueue.main.async { [weak self] in
                         guard let strongSelf = self else {return }
