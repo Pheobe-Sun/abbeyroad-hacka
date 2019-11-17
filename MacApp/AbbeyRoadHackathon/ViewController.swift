@@ -15,7 +15,7 @@ class ViewController: NSViewController {
     @IBOutlet private weak var imageView: NSImageView!
 
     @IBOutlet weak var progressView: NSView!
-    @IBOutlet weak var progressBar: NSProgressIndicator!
+    @IBOutlet weak var progressIndicator: NSProgressIndicator!
 
     private var categories = [String]() {
         didSet {
@@ -31,23 +31,6 @@ class ViewController: NSViewController {
         }
     }
     var audioURLS = [URL]()
-    var imageURL: URL? {
-        didSet {
-            guard imageURL != nil else { return }
-            ImageClassifier.categoriseImage(
-                inputURL: imageURL!,
-                completion: { (imageFile) in
-                    DispatchQueue.main.async { [weak self] in
-                        guard let strongSelf = self else {return }
-                        strongSelf.progressView.animator().isHidden = true
-                        let image = NSImage.init(contentsOf: imageFile.url)
-                        strongSelf.imageView.image = image
-                        strongSelf.categories = Array(imageFile.categories.keys)
-                    }
-            }
-            )
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,14 +52,27 @@ class ViewController: NSViewController {
         openPanel.canChooseDirectories = false
         openPanel.canChooseFiles = true
         openPanel.allowsMultipleSelection = false
+
         openPanel.beginSheetModal(for: view.window!) { (response) in
             if response == .OK {
                 guard let url = openPanel.url else { return }
                 openPanel.close()
-                self.imageURL = url
+                self.progressView.isHidden = false
+
+                ImageClassifier.categoriseImage(
+                inputURL: url) { (imageFile) in
+                    DispatchQueue.main.async { [weak self] in
+                        guard let strongSelf = self else { return }
+                        strongSelf.progressView.isHidden = true
+                        let image = NSImage.init(contentsOf: imageFile.url)
+                        strongSelf.imageView.image = image
+                        strongSelf.categories = Array(imageFile.categories.keys)
+                    }
+                }
             }
         }
     }
+
 
     func getAudioURLS(categories: [String]) {
         audioURLS.removeAll()

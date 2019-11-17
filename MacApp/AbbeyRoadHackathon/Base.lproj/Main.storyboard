@@ -712,11 +712,11 @@
                             <visualEffectView appearanceType="inheritedVibrantLight" blendingMode="withinWindow" material="popover" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="hF5-Cy-7hX">
                                 <rect key="frame" x="0.0" y="0.0" width="513" height="270"/>
                                 <subviews>
-                                    <progressIndicator wantsLayer="YES" maxValue="100" doubleValue="50" style="bar" translatesAutoresizingMaskIntoConstraints="NO" id="BgX-0X-d6q">
-                                        <rect key="frame" x="20" y="125" width="473" height="20"/>
+                                    <progressIndicator wantsLayer="YES" maxValue="100" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="dlC-Ea-bKj">
+                                        <rect key="frame" x="249" y="116" width="16" height="16"/>
                                     </progressIndicator>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="SR3-n5-GCu">
-                                        <rect key="frame" x="195" y="152" width="123" height="16"/>
+                                        <rect key="frame" x="195" y="137" width="123" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Processing Image..." id="WLB-VD-8xR">
                                             <font key="font" usesAppearanceFont="YES"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -725,16 +725,15 @@
                                     </textField>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="dlC-Ea-bKj" firstAttribute="top" secondItem="SR3-n5-GCu" secondAttribute="bottom" constant="5" id="88X-B3-QCO"/>
                                     <constraint firstItem="SR3-n5-GCu" firstAttribute="centerX" secondItem="hF5-Cy-7hX" secondAttribute="centerX" id="8Ca-ng-mUb"/>
-                                    <constraint firstItem="BgX-0X-d6q" firstAttribute="leading" secondItem="hF5-Cy-7hX" secondAttribute="leading" constant="20" id="8oq-A8-nrH"/>
-                                    <constraint firstItem="BgX-0X-d6q" firstAttribute="centerY" secondItem="hF5-Cy-7hX" secondAttribute="centerY" id="9ST-56-aK3"/>
-                                    <constraint firstAttribute="trailing" secondItem="BgX-0X-d6q" secondAttribute="trailing" constant="20" id="Qq6-xe-CVI"/>
-                                    <constraint firstItem="BgX-0X-d6q" firstAttribute="top" secondItem="SR3-n5-GCu" secondAttribute="bottom" constant="8" id="ZXQ-KF-Cz6"/>
+                                    <constraint firstItem="SR3-n5-GCu" firstAttribute="centerY" secondItem="hF5-Cy-7hX" secondAttribute="centerY" constant="-10" id="EYc-uf-Ycq"/>
+                                    <constraint firstItem="dlC-Ea-bKj" firstAttribute="centerX" secondItem="hF5-Cy-7hX" secondAttribute="centerX" id="nSh-fX-uzL"/>
                                 </constraints>
                             </visualEffectView>
-                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uRa-bx-Ig1">
-                                <rect key="frame" x="0.0" y="0.0" width="513" height="270"/>
-                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="QPa-HM-FVf"/>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="uRa-bx-Ig1">
+                                <rect key="frame" x="257" y="135" width="0.0" height="0.0"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" id="QPa-HM-FVf"/>
                             </imageView>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="JJq-In-V3k">
                                 <rect key="frame" x="-1" y="237" width="111" height="32"/>
@@ -760,24 +759,26 @@
                             </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="uRa-bx-Ig1" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="8de-jp-LFx"/>
+                            <constraint firstItem="uRa-bx-Ig1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="8de-jp-LFx"/>
                             <constraint firstItem="hF5-Cy-7hX" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="E52-A8-ub9"/>
                             <constraint firstAttribute="trailing" secondItem="hF5-Cy-7hX" secondAttribute="trailing" id="Hwn-CS-tb2"/>
                             <constraint firstItem="xGv-bl-egE" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="5" id="KwI-Th-7it"/>
-                            <constraint firstAttribute="trailing" secondItem="uRa-bx-Ig1" secondAttribute="trailing" id="UpG-Z6-4b9"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="uRa-bx-Ig1" secondAttribute="trailing" id="UpG-Z6-4b9"/>
                             <constraint firstItem="JJq-In-V3k" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="5" id="Vb3-H8-eJJ"/>
                             <constraint firstAttribute="bottom" secondItem="hF5-Cy-7hX" secondAttribute="bottom" id="abh-MD-j8q"/>
+                            <constraint firstItem="uRa-bx-Ig1" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="bOb-sP-aIj"/>
                             <constraint firstItem="xGv-bl-egE" firstAttribute="top" secondItem="JJq-In-V3k" secondAttribute="bottom" constant="5" id="ea1-LI-kGl"/>
-                            <constraint firstAttribute="bottom" secondItem="uRa-bx-Ig1" secondAttribute="bottom" id="iIN-qW-fS2"/>
+                            <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="uRa-bx-Ig1" secondAttribute="bottom" id="iIN-qW-fS2"/>
+                            <constraint firstItem="uRa-bx-Ig1" firstAttribute="centerY" secondItem="m2S-Jp-Qdl" secondAttribute="centerY" id="oXt-EK-xOU"/>
                             <constraint firstItem="hF5-Cy-7hX" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="vT2-4Q-Oko"/>
                             <constraint firstItem="JJq-In-V3k" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="5" id="xGY-JD-AUn"/>
-                            <constraint firstItem="uRa-bx-Ig1" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="xuk-7n-lxZ"/>
+                            <constraint firstItem="uRa-bx-Ig1" firstAttribute="top" relation="greaterThanOrEqual" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="xuk-7n-lxZ"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="imageButton" destination="JJq-In-V3k" id="YN2-Fs-ofX"/>
                         <outlet property="imageView" destination="uRa-bx-Ig1" id="dXq-Ms-4UT"/>
-                        <outlet property="progressBar" destination="BgX-0X-d6q" id="P8B-SW-A4e"/>
+                        <outlet property="progressIndicator" destination="dlC-Ea-bKj" id="h0F-1z-NqA"/>
                         <outlet property="progressView" destination="hF5-Cy-7hX" id="Ix6-lz-gro"/>
                         <outlet property="sonifyButton" destination="xGv-bl-egE" id="KcV-Ny-NEr"/>
                     </connections>
