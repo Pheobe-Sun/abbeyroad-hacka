@@ -34,7 +34,21 @@ public struct HTTPRequestOptions {
     }
 }
 
-public class NetworkingClient {
+public protocol Requester {
+    func request<T>(
+        _ requestOptions: HTTPRequestOptions,
+        _ callback: @escaping (Result<T, Error>) -> Void
+    )
+
+    func handleURLResponse<T>(
+        _ urlResponse: URLResponse?,
+        data: Data?,
+        err: Error?,
+        callback: @escaping (Result<T, Error>) -> Void
+    )
+}
+
+extension Requester {
     func request<T>(
         _ requestOptions: HTTPRequestOptions,
         _ callback: @escaping (Result<T, Error>) -> Void
@@ -52,7 +66,7 @@ public class NetworkingClient {
             }
         }
         let task = URLSession.shared.dataTask(with: request) { (data, urlResponse, err) in
-//            self.handleURLResponse(urlResponse, data: data, err: err, callback: callback)
+            self.handleURLResponse(urlResponse, data: data, err: err, callback: callback)
         }
         task.resume()
     }
