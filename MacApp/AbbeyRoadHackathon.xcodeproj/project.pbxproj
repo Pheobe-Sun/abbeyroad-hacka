@@ -14,6 +14,7 @@
 		5A9B6F7B2376E9C5004BAAD8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A9B6F7A2376E9C5004BAAD8 /* Assets.xcassets */; };
 		5A9B6F7E2376E9C5004BAAD8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5A9B6F7C2376E9C5004BAAD8 /* Main.storyboard */; };
 		5AA38F2C2376FC93003CEA2A /* ImageClassifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AA38F2B2376FC93003CEA2A /* ImageClassifier.swift */; };
+		5AB1047F238725E60074529A /* NetworkingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB1047E238725E60074529A /* NetworkingUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		5A9B6F7F2376E9C5004BAAD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5A9B6F802376E9C5004BAAD8 /* AbbeyRoadHackathon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AbbeyRoadHackathon.entitlements; sourceTree = "<group>"; };
 		5AA38F2B2376FC93003CEA2A /* ImageClassifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageClassifier.swift; sourceTree = "<group>"; };
+		5AB1047E238725E60074529A /* NetworkingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				5AA38F2B2376FC93003CEA2A /* ImageClassifier.swift */,
 				5A9B6F782376E9C3004BAAD8 /* ViewController.swift */,
 				5A156AC92381B1A7000F20DE /* NetworkingClient.swift */,
+				5AB1047E238725E60074529A /* NetworkingUtils.swift */,
 				5A40299A23833BFA00CE6F5F /* JSONRequester.swift */,
 				5A9B6F7A2376E9C5004BAAD8 /* Assets.xcassets */,
 				5A9B6F7C2376E9C5004BAAD8 /* Main.storyboard */,
@@ -151,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5AA38F2C2376FC93003CEA2A /* ImageClassifier.swift in Sources */,
+				5AB1047F238725E60074529A /* NetworkingUtils.swift in Sources */,
 				5A9B6F792376E9C3004BAAD8 /* ViewController.swift in Sources */,
 				5A40299B23833BFA00CE6F5F /* JSONRequester.swift in Sources */,
 				5A156ACA2381B1A7000F20DE /* NetworkingClient.swift in Sources */,

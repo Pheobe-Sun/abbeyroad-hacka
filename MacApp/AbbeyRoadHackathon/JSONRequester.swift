@@ -24,7 +24,7 @@ class JSONRequester: Requester {
             return .failure(NSError())
         }
 
-        do {        
+        do {
             let dictionary = try JSONSerialization.jsonObject(
                 with: data!,
                 options: JSONSerialization.ReadingOptions(rawValue: 0)
